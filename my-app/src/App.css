@@ -60,7 +60,11 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to right, #FFDEE9, #B5FFFC);
+  background-image: url('./images/hospital-background.jpg');
+  background-size: cover;        
+  background-position: center;   
+  background-repeat: no-repeat;  
+  background-attachment: fixed; 
 }
 
 
