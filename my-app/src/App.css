@@ -233,7 +233,14 @@ button:hover {
 html, body {
   height: 100%;
   width: 100%;
-  background-color: white; 
+  background-image: url('./images/hospital-background.jpg'); 
+  background-size: cover;                                   
+  background-position: center;                              
+  background-repeat: no-repeat;                             
+  background-attachment: fixed;                             
+  font-family: 'Segoe UI', sans-serif;
+  padding-top: 60px;
+  padding-bottom: 40px;
 }
 
 .page-container {
