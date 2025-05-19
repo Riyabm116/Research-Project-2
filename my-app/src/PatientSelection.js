@@ -4,28 +4,20 @@ import { useNavigate } from "react-router-dom";
 
 const PatientSelectionPage = () => {
   const navigate = useNavigate();
-
-
   const [patientName, setPatientName] = useState("");
   const [age, setAge] = useState("");
   const [checkupDate, setCheckupDate] = useState("");
 
-
   const [savedDetails, setSavedDetails] = useState(null);
-
 
   const handleSave = () => {
     if (patientName && age && checkupDate) {
       const patientData = { patientName, age, checkupDate };
 
-      
       setSavedDetails(patientData);
-
-      
       setPatientName("");
       setAge("");
       setCheckupDate("");
-
       alert("✅ Patient details saved successfully!");
     } else {
       alert("⚠ Please fill in all the fields before saving.");
@@ -113,6 +105,7 @@ const PatientSelectionPage = () => {
             View Dashboard
           </button>
         </div>
+        </div>
 
  
         {savedDetails && (
@@ -135,8 +128,7 @@ const PatientSelectionPage = () => {
           </div>
         )}
       </div>
-    </div>
-  );
+    );
 };
 
 export default PatientSelectionPage;
