@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+
 const PatientSelectionPage = () => {
   const navigate = useNavigate();
+
   const [patientName, setPatientName] = useState("");
   const [age, setAge] = useState("");
   const [checkupDate, setCheckupDate] = useState("");
-
-  const [savedDetails, setSavedDetails] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [savedDetails, setSavedDetails] = useState([]);
 
   const handleSave = () => {
     if (patientName && age && checkupDate) {
       const patientData = { patientName, age, checkupDate };
-
-      setSavedDetails(patientData);
+      setSavedDetails([...savedDetails, patientData]);
       setPatientName("");
       setAge("");
       setCheckupDate("");
@@ -24,46 +25,51 @@ const PatientSelectionPage = () => {
     }
   };
 
-  const handleEdit = () => {
-    if (savedDetails) {
-      setPatientName(savedDetails.patientName);
-      setAge(savedDetails.age);
-      setCheckupDate(savedDetails.checkupDate);
-      setSavedDetails(null); 
-    }
+  const handleEdit = (index) => {
+    const patient = savedDetails[index];
+    setPatientName(patient.patientName);
+    setAge(patient.age);
+    setCheckupDate(patient.checkupDate);
+    setSavedDetails(savedDetails.filter((_, i) => i !== index));
   };
-  
-  const handleDelete = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete the saved patient details?");
+
+  const handleDelete = (index) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
-      setSavedDetails(null);
+      setSavedDetails(savedDetails.filter((_, i) => i !== index));
     }
   };
-  
 
   const goToDashboard = () => {
     navigate("/dashboard");
   };
 
+  const filteredPatients = savedDetails.filter((patient) =>
+    patient.patientName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container">
       <div className="top-nav">
-        <input type="text" placeholder="Search" className="search-input" />
+        <input
+          type="text"
+          placeholder="Search by name"
+          className="search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <button className="search-btn">
           <FaSearch />
         </button>
-        <button className="nav-btn" onClick={goToDashboard}>
-          Dashboard
-        </button>
+        <button className="nav-btn" onClick={goToDashboard}>Dashboard</button>
         <button className="nav-btn">History</button>
         <button className="logout-btn">Logout</button>
       </div>
 
-  
+     
       <div className="main-content">
         <h2 className="title">Patient Selection Page</h2>
 
-   
         <div className="input-group">
           <label>Patient Name</label>
           <input
@@ -74,7 +80,6 @@ const PatientSelectionPage = () => {
           />
         </div>
 
-       
         <div className="input-group">
           <label>Age</label>
           <input
@@ -85,7 +90,6 @@ const PatientSelectionPage = () => {
           />
         </div>
 
-     
         <div className="input-group">
           <label>Last Check-up Date</label>
           <input
@@ -96,39 +100,31 @@ const PatientSelectionPage = () => {
           />
         </div>
 
-       
         <div className="button-group">
-          <button className="save-btn" onClick={handleSave}>
-            Save Details
-          </button>
-          <button className="dashboard-btn" onClick={goToDashboard}>
-            View Dashboard
-          </button>
+          <button className="save-btn" onClick={handleSave}>Save Details</button>
+          <button className="dashboard-btn" onClick={goToDashboard}>View Dashboard</button>
         </div>
-        </div>
-
- 
-        {savedDetails && (
-          <div className="saved-details">
-            <h3>Saved Patient Details:</h3>
-            <p>
-              <strong>Name:</strong> {savedDetails.patientName}
-            </p>
-            <p>
-              <strong>Age:</strong> {savedDetails.age}
-            </p>
-            <p>
-              <strong>Last Check-up:</strong> {savedDetails.checkupDate}
-            </p>
-
-            <div className="button-group">
-               <button className="edit-btn" onClick={handleEdit}>✏️ Edit</button>
-               <button className="delete-btn" onClick={handleDelete}>🗑️ Delete</button>
-            </div>
-          </div>
-        )}
       </div>
-    );
+
+      
+      {filteredPatients.length > 0 && (
+        <div className="saved-details-container">
+          {filteredPatients.map((patient, index) => (
+            <div key={index} className="saved-details">
+              <h3>Saved Patient Details:</h3>
+              <p><strong>Name:</strong> {patient.patientName}</p>
+              <p><strong>Age:</strong> {patient.age}</p>
+              <p><strong>Last Check-up:</strong> {patient.checkupDate}</p>
+              <div className="button-group">
+                <button className="edit-btn" onClick={() => handleEdit(index)}>✏️ Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(index)}>🗑️ Delete</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default PatientSelectionPage;
